@@ -1,0 +1,122 @@
+﻿@model CreateProductViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 class="fw-bold">Edit</h1>
+
+<h4 class="d-flex justify-content-center align-items-center">@Model.name</h4>
+<hr />
+<div class="row">
+    <div class=" col-md-7 container d-flex justify-content-center align-items-center  p-4 " >
+        <form asp-area="Supervisor" asp-action="SaveEdit" asp-controller="Product" method="post" class="p-4 rounded-3 shadow" enctype="multipart/form-data" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" hidden />
+            <input hidden asp-for="ImageUrl"/>
+
+            <div class="row">
+
+                <div class="col-7">
+                    <div class="form-group">
+                        <label asp-for="name" class="control-label"></label>
+                        <input asp-for="name" class="form-control" />
+                        <span asp-validation-for="name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DiscounPrice" class="control-label"></label>
+                        <input asp-for="DiscounPrice" class="form-control" placeholder="No Discount Yet" />
+                        <span asp-validation-for="DiscounPrice" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control" placeholder="No Description Yet"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ImageUrl" class="control-label"></label>
+                        <input asp-for="ImageUrl" class="form-control" type="file" name="file" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CategoryId" class="control-label"></label>
+
+                        <select asp-for="CategoryId" class="form-select border-0 shadow">
+                            @foreach (var item in Model.CategoryList)
+                            {
+                                @if (item.Id == Model.CategoryId)
+                                {
+                                    <option selected value="@item.Id">@item.name</option>
+
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.name</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group d-flex justify-content-center align-items-center">
+                        <input type="submit" value="Save" class="btn btn-success m-3 rounded-4" />
+                    </div>
+
+
+                    
+               
+                </div>
+
+                <div class="col-5">
+                    <img src="@Model.ImageUrl" width="100%" style="border-radius:5px ; border:1px solid #bbb9b9" />
+                </div>
+            </div>
+
+            
+        </form>
+
+       
+    </div>
+</div>
+
+<div class="d-flex justify-content-center align-items-center container">
+    <a asp-action="All" asp-controller="Product" class="btn btn-primary m-4">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: [
+            
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+           
+            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          tinycomments_mode: 'embedded',
+          tinycomments_author: 'Author name',
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' },
+          ],
+          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+        });
+    </script>
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+

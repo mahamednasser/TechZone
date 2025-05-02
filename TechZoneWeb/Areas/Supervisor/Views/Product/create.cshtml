@@ -1,0 +1,88 @@
+﻿@model CreateProductViewModel
+
+@{
+    ViewData["Title"] = "create";
+}
+
+<h1>create</h1>
+
+<h4 class="d-flex justify-content-center align-items-center"> Add New Product</h4>
+<hr />
+<div class="row">
+    <div class=" col-md-7 container d-flex justify-content-center align-items-center  p-4">
+        <form asp-action="SaveCreate" asp-controller="Product" method="post" class="p-4 rounded-3 shadow" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DiscounPrice" class="control-label"></label>
+                <input asp-for="DiscounPrice" class="form-control" />
+                <span asp-validation-for="DiscounPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" type="file" name="file" />
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+
+                <select asp-for="CategoryId" class="form-select border-0 shadow">
+                    @foreach(var item in Model.CategoryList)
+                    {
+                    <option value="@item.Id">@item.name</option>
+                        
+                    }
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+           
+
+            <div class="form-group d-flex justify-content-center align-items-center m-3">
+                <input type="submit" value="Create" class="btn btn-success m-3 rounded-4" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center align-items-center container">
+    <a asp-action="All" asp-controller="Product" class="btn btn-primary m-4">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: [
+            
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons',  'lists',   'table', 'visualblocks', 'wordcount',
+           
+            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate',  'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap ',
+          
+        });
+    </script>
+    @{
+   <partial name="_ValidationScriptsPartial" />
+    }
+}

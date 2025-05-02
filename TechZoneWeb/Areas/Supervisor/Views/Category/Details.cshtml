@@ -1,0 +1,40 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 class="fw-bold">Edit</h1>
+
+<h4 class="d-flex justify-content-center align-items-center">@Model.name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-5 container  justify-content-center align-items-center" >
+        <form asp-action="SaveEdit" asp-controller="Category" method="post" class="p-4 rounded-3 shadow" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" hidden />
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayOrder" class="control-label"></label>
+                <input asp-for="DisplayOrder" class="form-control" />
+                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            </div>
+            <div class="form-group d-flex justify-content-center align-items-center">
+                <input type="submit" value="Save" class="btn btn-success m-3 rounded-4" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center align-items-center container">
+    <a asp-action="All" asp-controller="Category" class="btn btn-primary m-4">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

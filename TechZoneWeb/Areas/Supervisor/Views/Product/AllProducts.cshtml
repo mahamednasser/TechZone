@@ -1,0 +1,77 @@
+﻿@model List<Product>
+<a asp-action="create" asp-controller="Product" class="btn btn-primary "> Create Product</a>
+<div class="table-responsive">
+
+<table class="table table-hover table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                price
+            </th>
+            <th>
+                Discount Price
+            </th>
+            <th>
+                Category
+            </th>
+        </tr>
+    </thead>
+
+
+
+    @foreach (var item in Model.OrderBy(x => x.name))
+    {
+        <tr>
+            <td>
+                @item.name
+            </td>
+
+            @if (item.Description==null) 
+            { 
+            <td> 
+                No Description 
+            </td> 
+            } 
+            else 
+            {
+            <td> 
+                @Html.Raw(item.Description) 
+            </td> 
+            } 
+
+            <td>
+                @item.Price
+            </td>
+
+            @if (item.DiscounPrice == null)
+            {
+                <td>No Discount Yet</td>
+            }
+            else
+            {
+                <td>
+                    @item.DiscounPrice
+                </td>
+            }
+            <td>
+                @item.Category.name
+            </td>
+
+            <td> 
+                  <a asp-action="Edit" asp-route-id="@item.Id" asp-controller="Product" class="btn btn-success">Edit</a> 
+            </td>
+
+             <td> 
+                     <a asp-action="Remove" asp-route-id="@item.Id" asp-controller="Product" class="btn btn-primary" onclick="return confirm('Are you sure for delete')">Remove</a> 
+             </td> 
+       </tr>  
+     }
+</table>
+</div>
+

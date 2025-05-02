@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Product> 
+
+<div class="row pb-3 justify-content-center align-items-stretch d-flex">
+    @foreach (var item in @Model)
+    {
+        <div class="col-lg-3 col-sm-6 d-flex">
+            <div class="row p-2 flex-fill">
+                <div class="col-12 p-1 h-100">
+                    <div class="card d-flex flex-column border-0 p-3 shadow border-top border-5 rounded h-100">
+                        <img src="@item.ImageUrl" class="card-img-top rounded" />
+                        <div class="card-body pb-0">
+                            <div class="p-lg-1">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@item.name</p>
+
+                            </div>
+                           
+                            @if (item.DiscounPrice != null)
+                            {
+                                <div class="p-lg-1">
+                                    <p class="text-dark text-opacity-75 text-center ">
+                                        Price: <span class="text-decoration-line-through">@item.Price.ToString("c")</span>
+                                    </p>
+                                </div>   
+                                <div class="p-lg-1">
+                                    <p class="text-dark fw-bolder text-center">
+                                        After Discount:<span class="text-warning"> @item.DiscounPrice?.ToString("c")</span>
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="p-lg-1">
+                                    <p class="text-dark fw-bolder text-center">
+                                        Price <span class="text-warning"> @item.Price.ToString("c")</span>
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                        <div class="mt-auto">
+                            <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-primary bg-gradient border-0 form-control rounded-4">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
