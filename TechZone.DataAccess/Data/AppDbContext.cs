@@ -17,13 +17,14 @@ namespace TechZone.DataAccess.Data
         {
 
         }
-         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-         public DbSet<Category> Categories { get; set; }
-         public DbSet<Product> Products { get; set; }
-         public DbSet<ShoppingCart> shoppingCarts { get; set; }
-         public DbSet<Brand> brands { get; set; }
-         public DbSet<OrderDetail> orderDetails { get; set; }
-         public DbSet<OrderHeader> orderHeaders { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ShoppingCart> shoppingCarts { get; set; }
+        public DbSet<Brand> brands { get; set; }
+        public DbSet<OrderDetail> orderDetails { get; set; }
+        public DbSet<OrderHeader> orderHeaders { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
 
 

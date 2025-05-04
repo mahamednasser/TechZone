@@ -1,26 +1,81 @@
-﻿@model IEnumerable<Product> 
+﻿@model HomeCategoryBrandProduct
 
 <div class="row pb-3 justify-content-center align-items-stretch d-flex">
-    @foreach (var item in @Model)
-    {
+
+
+    <form asp-action="Search" method="get" class="search-form w-100 mb-4">
+        <div class="input-group shadow rounded-pill overflow-hidden">
+            <input asp-route-id="" type="text" name="query" class="form-control border-0 px-4 py-2" placeholder="Search products or brands..." />
+            <button type="submit" class="btn btn-primary px-4 rounded-end">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <section class="py-5 bg-white">
+        <div class="container">
+            <h2 class="text-center mb-5 fw-bold text-uppercase text-primary">Shop by Category</h2>
+
+            <div class="row g-4">
+
+                <!-- Category Card -->
+                @foreach (var item in Model.Categories)
+                {
+                    <div class="col-sm-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow category-card h-100 rounded-4 p-5">
+                            <div class="overflow-hidden rounded-top-4" style="max-height: 160px;">
+                                <img src="@item.ImageUrl" class="card-img-top img-fluid object-fit-cover" style="height: 160px;" alt="@item.name">
+                            </div>
+                            <div class="card-body text-center p-3">
+                                <h6 class="card-title fw-semibold text-dark mb-2">@item.name</h6>
+                                <a asp-action="DisplayCategory" asp-route-CategoryId="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">Show All</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    @foreach (var item in @Model.Products)
+    {  
         <div class="col-lg-3 col-sm-6 d-flex">
             <div class="row p-2 flex-fill">
                 <div class="col-12 p-1 h-100">
                     <div class="card d-flex flex-column border-0 p-3 shadow border-top border-5 rounded h-100">
-                        <img src="@item.ImageUrl" class="card-img-top rounded" />
+                        @if (item.ProductImages != null && item.ProductImages.Count() > 0)
+                        {
+                            <img src="@item.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
+                        }
+                        else
+                        {
+                            <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                        }
+
                         <div class="card-body pb-0">
                             <div class="p-lg-1">
                                 <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@item.name</p>
 
                             </div>
-                           
+                            <div class="p-lg-1">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@item.Brand.Name</p>
+
+                            </div>
+
                             @if (item.DiscounPrice != null)
                             {
                                 <div class="p-lg-1">
                                     <p class="text-dark text-opacity-75 text-center ">
                                         Price: <span class="text-decoration-line-through">@item.Price.ToString("c")</span>
                                     </p>
-                                </div>   
+                                </div>
                                 <div class="p-lg-1">
                                     <p class="text-dark fw-bolder text-center">
                                         After Discount:<span class="text-warning"> @item.DiscounPrice?.ToString("c")</span>
@@ -44,4 +99,50 @@
             </div>
         </div>
     }
+
+
+
+
+
+
+
+
 </div>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold text-uppercase text-primary">Shop by Brand</h2>
+
+        <div class="row g-4">
+
+            <!-- Category Card -->
+            @foreach (var item in Model.Brands)
+            {
+                @if (item.ImageUrl != null)
+                {
+                    <div class="col-sm-6 col-lg-3 mb-4 d-flex flex-column align-items-center">
+                        <!-- الكارت الدائري -->
+                        <div class="rounded-circle overflow-hidden shadow"
+                             style="width: 200px; height: 200px;">
+                            <img src="@item.ImageUrl"
+                                 class="img-fluid w-100 h-100"
+                                 
+                                 alt="@item.Name" />
+                        </div>
+
+                        <!-- النص والزر تحت الدائرة -->
+                        <div class="text-center mt-3">
+                            <h6 class="fw-semibold text-dark mb-2">@item.Name</h6>
+                            <a asp-action="DisplayBrand" asp-route-BrandId="@item.Id"
+                               class="btn btn-sm btn-outline-primary rounded-pill px-3">Show All</a>
+                        </div>
+                    </div>
+                }
+            }
+
+
+
+
+        </div>
+    </div>
+</section>

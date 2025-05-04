@@ -9,7 +9,7 @@
                 Product Name
             </th>
             <th>
-                Description
+                Brand
             </th>
             <th>
                 price
@@ -19,6 +19,10 @@
             </th>
             <th>
                 Category
+            </th>
+            
+            <th>
+                Product Count In Stock
             </th>
         </tr>
     </thead>
@@ -32,18 +36,9 @@
                 @item.name
             </td>
 
-            @if (item.Description==null) 
-            { 
-            <td> 
-                No Description 
-            </td> 
-            } 
-            else 
-            {
-            <td> 
-                @Html.Raw(item.Description) 
-            </td> 
-            } 
+           <td>
+               @item.Brand.Name
+           </td>
 
             <td>
                 @item.Price
@@ -61,6 +56,9 @@
             }
             <td>
                 @item.Category.name
+            </td>
+            <td>
+                @item.ProductCount
             </td>
 
             <td> 

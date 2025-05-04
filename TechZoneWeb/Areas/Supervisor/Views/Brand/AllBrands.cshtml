@@ -1,0 +1,41 @@
+﻿@model List<Brand>
+<a asp-action="create" asp-controller="Brand" class="btn btn-primary "> Create Brand</a>
+<div class="table-responsive-xxl">
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                     Description
+                </th>
+                <th>
+                    Resource Name
+                </th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.OrderBy(x => x.Name))
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.ResourceName
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" asp-controller="Brand" class="btn btn-success">Edit</a>
+                </td>
+                @* <td> *@
+                @*     <a asp-action="Remove" asp-route-id="@item.Id" asp-controller="Brand" class="btn btn-primary" onclick="return confirm('Are you sure for delete')">Remove</a> *@
+                @* </td> *@
+            </tr>
+        }
+    </table>
+
+</div>
+

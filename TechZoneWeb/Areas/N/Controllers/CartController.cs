@@ -32,9 +32,11 @@ namespace TechZoneWeb.Areas.N.Controllers
                     ShoppingCarts = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userid,IncludeProp:"product"),
                     orderHeader = new OrderHeader()
                 };
+               
+                 IEnumerable<ProductImage> productImageList=_unitOfWork.ProductImage.GetAll(); 
                 foreach (var item in shoppingCartViewModel.ShoppingCarts) 
                 {
-                    
+                    item.product.ProductImages=productImageList.Where(x=>x.ProductId==item.product.Id).ToList();
                     if (item.product.DiscounPrice == null)
                     {
                         item.price = item.product.Price;

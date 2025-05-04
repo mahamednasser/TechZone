@@ -6,18 +6,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TechZoneWeb</title>
+    <title>@ViewData["Title"] - TechZone</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechZoneWeb.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+   
+
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3", data-bs-theme="dark">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3" style="background-color:rgb(16,16,15)", data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TechZoneWeb</a>
+                <div>
+                <a class="navbar-brand"  asp-controller="Home" asp-action="Index">
+                    <img src="\Images\nnjn.png" alt="TechZone Logo" style="max-height: 60px; border-radius:50%;" />
+                </a>
+                </div>
+                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Tech Zone</a> 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,6 +39,13 @@
                         <li class="nav-item">
                             <a class="nav-link " asp-area="Supervisor" asp-controller="OrderManagement" asp-action="GetAll">Order Management</a>
                         </li>
+                       
+
+
+
+                        
+
+
 
                         @if (User.IsInRole(SD.RoleAdmin))
                         {
@@ -46,10 +62,18 @@
                                         <a class="dropdown-item" asp-area="Supervisor" asp-controller="Product" asp-action="All">Products</a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register" >Creat User</a>
+                                        <a class="dropdown-item" asp-area="Supervisor" asp-controller="Brand" asp-action="All">Brands</a>
                                     </li>
 
 
+                               
+                                
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Creat User</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Supervisor" asp-controller="User" asp-action="All">Manage User</a>
+                                    </li>
                                 </ul>
                             </li>
                         }
@@ -85,7 +109,7 @@
         </main>
     </div>
 
-    <footer class="border-top  footer  bg-primary text-white">
+    <footer class="border-top  footer   text-white" style="background-color:rgb(16,16,15)">
         <div class="container text-center">
              TechZoneWeb
         </div>
@@ -94,6 +118,10 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.tiny.cloud/1/aphbzmcthvczjbffug3j6stbf2h414ki4zsq2uxxia8relu3/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

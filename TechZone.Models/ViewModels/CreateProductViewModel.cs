@@ -20,12 +20,15 @@ namespace TechZone.Models.ViewModels
         [Required]
         [DisplayName("Original Price")]
         public double Price { get; set; }
-
-
+        [DisplayName("Products Count in stock")]
+        public int? ProductCount { get; set; }
+        public int? BrandId { get; set; }
+        public List<Brand>? BrandList { get; set; }
         [DisplayName("Price After discount")]
         public double? DiscounPrice { get; set; }
 
-        public string? ImageUrl { get; set; }
+        public List<ProductImage>? ProductImages { get; set; }
+
         [Required(ErrorMessage ="The Category Is Required")]
         [DisplayName("Category")]
         public int CategoryId { get; set; }

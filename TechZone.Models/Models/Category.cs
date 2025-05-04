@@ -12,5 +12,8 @@ namespace TechZone.Models.Models
         [Required]
         [Range(0,200,ErrorMessage ="the range between 0 => 200")]
         public int DisplayOrder { get; set; }
+        public string? ImageUrl { get; set; }
+
+        public ICollection<Product>? Products  { get; set; }
     }
 }

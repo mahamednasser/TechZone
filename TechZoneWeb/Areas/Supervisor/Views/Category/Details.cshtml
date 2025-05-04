@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-5 container  justify-content-center align-items-center" >
-        <form asp-action="SaveEdit" asp-controller="Category" method="post" class="p-4 rounded-3 shadow" >
+        <form asp-action="SaveEdit" asp-controller="Category" method="post" class="p-4 rounded-3 shadow" enctype="multipart/form-data" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="Id" hidden />
 
@@ -24,10 +24,20 @@
                 <input asp-for="DisplayOrder" class="form-control" />
                 <span asp-validation-for="DisplayOrder" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" type="file" name="file" />
+
+            </div>
             <div class="form-group d-flex justify-content-center align-items-center">
                 <input type="submit" value="Save" class="btn btn-success m-3 rounded-4" />
             </div>
         </form>
+    </div>
+
+    <div class="col-md-5">
+        <img src="@Model.ImageUrl" width="100%" style="border-radius:5px ; border:1px solid #bbb9b9" />
     </div>
 </div>
 

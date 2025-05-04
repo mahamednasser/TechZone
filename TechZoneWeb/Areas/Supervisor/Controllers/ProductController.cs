@@ -23,7 +23,7 @@ namespace TechZoneWeb.Areas.Supervisor.Controllers
         }
         public IActionResult All()
         {
-            List<Product> ProductList=_unitOfWork.Product.GetAll(IncludeProp:"Category").ToList();
+            List<Product> ProductList=_unitOfWork.Product.GetAll(IncludeProp:"Category,Brand").ToList();
             return View("AllProducts",ProductList);
         }
 
@@ -31,7 +31,7 @@ namespace TechZoneWeb.Areas.Supervisor.Controllers
         { 
             if(id != 0  )
             {
-               Product ProductFrmDb= _unitOfWork.Product.GetById(x=>x.Id==id);
+               Product ProductFrmDb= _unitOfWork.Product.GetById(x=>x.Id==id,IncludeProp:"ProductImages");
                 if (ProductFrmDb != null)
                 {
                     CreateProductViewModel obj= new CreateProductViewModel();
@@ -41,8 +41,11 @@ namespace TechZoneWeb.Areas.Supervisor.Controllers
                     obj.DiscounPrice = ProductFrmDb.DiscounPrice;
                     obj.CategoryId = ProductFrmDb.CategoryId;
                     obj.name=ProductFrmDb.name;
-                    obj.ImageUrl = ProductFrmDb.ImageUrl;
+                    obj.BrandId = ProductFrmDb.BrandId;
+                    obj.ProductImages= ProductFrmDb.ProductImages;
+                    obj.ProductCount=ProductFrmDb.ProductCount;
                     obj.CategoryList=_unitOfWork.Category.GetAll().ToList();
+                    obj.BrandList=_unitOfWork.Brand.GetAll().ToList();
                     return View("Details", obj);
                 }
                 return NotFound();
@@ -50,53 +53,71 @@ namespace TechZoneWeb.Areas.Supervisor.Controllers
             return NotFound();
         }
         [HttpPost]
-        public IActionResult SaveEdit(CreateProductViewModel objfrmRequest,IFormFile? file)
+        public IActionResult SaveEdit(CreateProductViewModel objfrmRequest,List<IFormFile>? files)
         {
             if (ModelState.IsValid)
             {
                 if (objfrmRequest.Id != 0 && objfrmRequest.Id !=null )
                 {
                     string wwwrootpath = _webHostEnvironment.WebRootPath.ToString();
-                    if (file != null)
+                    if (files != null)
                     {
-                        string filename=Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                       string productPath=Path.Combine(wwwrootpath,@"Images/Products");
+                        foreach (IFormFile file in files) { 
+                        
+                            string filename=Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                            string productPath = @"Images\Products\product-" + objfrmRequest.Id;
 
-                        if (!string.IsNullOrEmpty( objfrmRequest.ImageUrl)) 
-                        { 
-                            string oldPath=Path.Combine(wwwrootpath,objfrmRequest.ImageUrl.Trim('\\'));
-                            if (System.IO.File.Exists(oldPath)) 
+                            string FinalPath =Path.Combine(wwwrootpath,productPath);
+
+                            if (!Directory.Exists(FinalPath)) 
                             {
-                                System.IO.File.Delete(oldPath);
+                                Directory.CreateDirectory(FinalPath);
                             }
-                        
-                        }
 
-                        using (var filestream = new FileStream(Path.Combine(productPath, filename), FileMode.Create)) 
-                        {
-                            file.CopyTo(filestream);
-                        
+                            using (var filestream = new FileStream(Path.Combine(FinalPath, filename), FileMode.Create))
+                            {
+                                file.CopyTo(filestream);
+
+                            }
+                            ProductImage productImage = new()
+                            {
+                                ImageUrl = @"\" + productPath + @"\" + filename,
+                                ProductId = (int)objfrmRequest.Id
+                            };
+                            if (objfrmRequest.ProductImages == null) { 
+                                objfrmRequest.ProductImages = new List<ProductImage>();
+                            
+                            }
+                            objfrmRequest.ProductImages.Add(productImage);
                         }
-                        objfrmRequest.ImageUrl = @"\Images\Products\" + filename;
-                    }
-                    Product product=_unitOfWork.Product.GetById(x=>x.Id == objfrmRequest.Id);
-                    product.name = objfrmRequest.name;
-                    product.ImageUrl = objfrmRequest.ImageUrl;
-                    product.CategoryId = objfrmRequest.CategoryId;
-                    product.Price = objfrmRequest.Price;
-                    product.Description = objfrmRequest.Description;
-                    product.DiscounPrice = objfrmRequest.DiscounPrice;
+                        Product product = _unitOfWork.Product.GetById(x => x.Id == objfrmRequest.Id);
+                        product.name = objfrmRequest.name;
+                        product.ProductImages = objfrmRequest.ProductImages;
+                        product.CategoryId = objfrmRequest.CategoryId;
+                        product.Price = objfrmRequest.Price;
+                        product.ProductCount = objfrmRequest.ProductCount;
+                        product.Description = objfrmRequest.Description;
+                        product.DiscounPrice = objfrmRequest.DiscounPrice;
+                        product.BrandId = objfrmRequest.BrandId;
   
-                    _unitOfWork.Product.Update(product);
-                    _unitOfWork.save();
+                        _unitOfWork.Product.Update(product);
+                        _unitOfWork.save();
+                       
+
+                    }
+                   
                     TempData["success"] = "Updated Successfully";
                     return RedirectToAction("All");
                 }
+                TempData["error"] = "failed To update Product";
                 objfrmRequest.CategoryList=_unitOfWork.Category.GetAll().ToList() ;
+                objfrmRequest.BrandList = _unitOfWork.Brand.GetAll().ToList();
                 return View("Details",objfrmRequest);
             }
+            TempData["error"] = "failed To update Product";
 
             objfrmRequest.CategoryList = _unitOfWork.Category.GetAll().ToList();
+            objfrmRequest.BrandList= _unitOfWork.Brand.GetAll().ToList();
             return View("Details", objfrmRequest);
         }
 
@@ -107,11 +128,27 @@ namespace TechZoneWeb.Areas.Supervisor.Controllers
                 Product obj = _unitOfWork.Product.GetById(x => x.Id == id);
                 if (obj != null)
                 {
+                    string productPath = @"Images\Products\product-" + id;
+
+                    string FinalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+
+                    if (Directory.Exists(FinalPath))
+                    {
+                        string[] files = Directory.GetFiles(FinalPath);
+                        foreach (string file in files)
+                        {
+                            System.IO.File.Delete(file);
+                        }
+                        Directory.Delete(FinalPath);
+                    }
+
+
                     _unitOfWork.Product.Remove(obj);
                     _unitOfWork.save();
-                    TempData["success"] = "The Element Deleted";
+                    TempData["success"] = "The Product Deleted Successfully";
                     return RedirectToAction("All");
                 }
+                
                 return NotFound();
             }
             return NotFound();
@@ -120,46 +157,108 @@ namespace TechZoneWeb.Areas.Supervisor.Controllers
         public IActionResult create()
         {
             List<Category> categories = _unitOfWork.Category.GetAll().ToList();
+            List<Brand> brands=_unitOfWork.Brand.GetAll().ToList();
             CreateProductViewModel productViewModel = new CreateProductViewModel();
             productViewModel.CategoryList = categories;
+            productViewModel.BrandList = brands;
 
             return View("create",productViewModel);
         }
         [HttpPost]
-        public IActionResult SaveCreate(CreateProductViewModel objFrmRequest ,IFormFile? file) 
+        public IActionResult SaveCreate(CreateProductViewModel objfrmRequest ,List<IFormFile>? files) 
         {
             if (ModelState.IsValid) 
             {
-                string wwwrootpath = _webHostEnvironment.WebRootPath.ToString();
-                if (file != null)
+                    Product obj = new Product();
+                if (objfrmRequest.Id == 0 || objfrmRequest.Id==null)
                 {
-                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string productPath = Path.Combine(wwwrootpath, @"Images/Products");
+                    obj.name = objfrmRequest.name;
+                    obj.Description = objfrmRequest.Description;
+                    obj.Price = objfrmRequest.Price;
+                    obj.ProductCount = objfrmRequest.ProductCount;
+                    obj.DiscounPrice = objfrmRequest.DiscounPrice;
+                    obj.CategoryId = objfrmRequest.CategoryId;
+                    obj.BrandId = objfrmRequest.BrandId;
 
-                    using (var filestream = new FileStream(Path.Combine(productPath, filename), FileMode.Create))
+                    _unitOfWork.Product.Add(obj);
+                    _unitOfWork.save();
+
+
+
+                    if (files != null)
                     {
-                        file.CopyTo(filestream);
+                        string wwwrootpath = _webHostEnvironment.WebRootPath.ToString();
+                        foreach (IFormFile file in files)
+                        {
+
+                            string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                            string productPath = @"Images\Products\product-" + obj.Id;
+
+                            string FinalPath = Path.Combine(wwwrootpath, productPath);
+
+                            if (!Directory.Exists(FinalPath))
+                            {
+                                Directory.CreateDirectory(FinalPath);
+                            }
+
+                            using (var filestream = new FileStream(Path.Combine(FinalPath, filename), FileMode.Create))
+                            {
+                                file.CopyTo(filestream);
+
+                            }
+                            ProductImage productImage = new()
+                            {
+                                ImageUrl = @"\" + productPath + @"\" + filename,
+                                ProductId = obj.Id
+                            };
+                            if (obj.ProductImages == null)
+                            {
+                                obj.ProductImages = new List<ProductImage>();
+
+                            }
+                            obj.ProductImages.Add(productImage);
+                        }
+
+                        _unitOfWork.Product.Update(obj);
+                        _unitOfWork.save();
+                        TempData["success"] = " Product created successfully";
 
                     }
-                    objFrmRequest.ImageUrl =@"\Images\Products\" + filename;
-                }
-                //mapping 
-                Product obj = new Product();
-                obj.name=objFrmRequest.name;
-                obj.Description=objFrmRequest.Description;
-                obj.Price=objFrmRequest.Price;
-                obj.DiscounPrice=objFrmRequest.DiscounPrice;
-                obj.ImageUrl=objFrmRequest.ImageUrl;
-                obj.CategoryId=objFrmRequest.CategoryId;
 
-                _unitOfWork.Product.Add(obj);
-                _unitOfWork.save();
-                TempData["success"] = "created successfully";
-                return RedirectToAction("All");
+
+
+                    return RedirectToAction("All");
+                }
             }
-            objFrmRequest.CategoryList= _unitOfWork.Category.GetAll().ToList();
+            objfrmRequest.CategoryList= _unitOfWork.Category.GetAll().ToList();
+            objfrmRequest.BrandList= _unitOfWork.Brand.GetAll().ToList();
             TempData["error"] = "failed To Create Product";
-            return RedirectToAction("create",objFrmRequest);
+            return RedirectToAction("create",objfrmRequest);
+        }
+
+
+        public IActionResult removeImage(int ImageId)
+        {
+            ProductImage image =_unitOfWork.ProductImage.GetById(x=>x.Id==ImageId);
+            var productId=image.ProductId;
+            if(image != null)
+            {
+                if (!string.IsNullOrEmpty(image.ImageUrl))
+                {
+                    var oldPath=Path.Combine(_webHostEnvironment.WebRootPath, image.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
+
+                }
+                    _unitOfWork.ProductImage.Remove(image);
+                    _unitOfWork.save();
+                TempData["success"] = "The Image Is Deleted Successfully";
+            }
+
+
+            return RedirectToAction("Edit", new { id = productId });
         }
 
     }

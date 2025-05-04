@@ -27,16 +27,18 @@ namespace TechZone.Models.Models
        
         [DisplayName("Price After discount")]
         public double? DiscounPrice  { get; set; }
-
-        public string? ImageUrl { get; set; }
-        public string? BrandId { get; set; }
+        [DisplayName("Products Count in stock")]
+        public int? ProductCount { get; set; }
+        public int? BrandId { get; set; }
         [ForeignKey("BrandId")]
         [ValidateNever]
-        Brand Brand { get; set; }
+       public Brand Brand { get; set; }
 
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         [ValidateNever]
         public Category Category { get; set; }
+        [ValidateNever]
+        public List<ProductImage> ProductImages { get; set; }
     }
 }

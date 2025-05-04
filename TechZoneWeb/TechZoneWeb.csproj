@@ -29,6 +29,8 @@
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Controllers\" />
+    <Folder Include="wwwroot\Images\Brands\" />
+    <Folder Include="wwwroot\Images\Category\" />
     <Folder Include="wwwroot\Images\Products\" />
   </ItemGroup>
 
